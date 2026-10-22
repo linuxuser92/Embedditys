@@ -363,8 +363,8 @@
     <!-- download -->
     <div class="download-area">
       <p>Get the simulator and run a tiny OS inside your real one.</p>
-        <a href="https://github.com/linuxuser92/Embedditys/releases/download/12/embedditys.exe"
-          class="dl-btn" id="download-button" download>Download for Windows 64-bits</a>
+      <a href="https://github.com/linuxuser92/Embedditys/releases/download/1.0/embedditys.exe"
+         class="dl-btn" id="download-button" download>Download for Windows 64-bits</a>
       <span class="lazy-note">* too lazy to add Windows 32-bits</span>
     </div>
 
@@ -376,7 +376,7 @@
       </div>
       <div class="meta-item">
         <span class="meta-label">Version</span>
-        <span class="meta-value mono">0.9.2</span>
+        <span class="meta-value mono">1.0</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">Type</span>
@@ -437,28 +437,5 @@
     </div>
 
   </div>
-
-  <!-- simple click feedback -->
-  <script>
-    (function() {
-      var btn = document.getElementById('download-button');
-      if (btn) {
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          var originalText = this.textContent;
-          this.textContent = 'Just a simulation — no download';
-          this.style.pointerEvents = 'none';
-          this.style.opacity = '0.5';
-          var self = this;
-          setTimeout(function() {
-            self.textContent = originalText;
-            self.style.pointerEvents = 'auto';
-            self.style.opacity = '1';
-          }, 1800);
-        });
-      }
-    })();
-  </script>
-
 </body>
 </html>
