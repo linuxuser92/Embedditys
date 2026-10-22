@@ -1,1 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embeddity — OS inside OS | Fake OS Simulator</title>
+  <style>
+    /* ===== 2017-ERA STYLES — FLAT, SHARP, MINIMAL ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 14px;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      max-width: 680px;
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+    }
+
+    /* header — clean, flat, sharp */
+    .header {
+      padding: 40px 40px 24px 40px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    .status {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #4e8f32;
+      background: #eef7e9;
+      padding: 4px 10px;
+      border: 1px solid #c8e0b8;
+    }
+
+    h1 {
+      font-size: 40px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: #666;
+      font-weight: 400;
+    }
+
+    /* download area */
+    .download-area {
+      padding: 32px 40px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .download-area p {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    .dl-btn {
+      display: inline-block;
+      background: #1a1a1a;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 32px;
+      text-decoration: none;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      border: none;
+      text-align: center;
+    }
+
+    .dl-btn:hover {
+      background: #333333;
+    }
+
+    .dl-btn:active {
+      background: #000000;
+    }
+
+    .lazy-note {
+      display: block;
+      font-size: 12px;
+      color: #999;
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    /* meta section */
+    .meta {
+      padding: 24px 40px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    .meta-value {
+      font-size: 14px;
+      color: #1a1a1a;
+      font-weight: 500;
+    }
+
+    .meta-value.mono {
+      font-family: 'SF Mono', Monaco, Inconsolata, 'Courier New', monospace;
+      font-size: 13px;
+      background: #f5f5f5;
+      padding: 2px 8px;
+      border: 1px solid #e0e0e0;
+    }
+
+    /* languages block — GitHub-style 2017 language bar */
+    .languages {
+      padding: 24px 40px;
+      border-bottom: 1px solid #e0e0e0;
+      background: #fafafa;
+    }
+
+    .languages-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .languages-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    .languages-status {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #4e8f32;
+    }
+
+    .lang-bar {
+      display: flex;
+      height: 8px;
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .lang-segment {
+      height: 100%;
+    }
+
+    .lang-cpp {
+      background: #1a1a1a;
+      width: 78.2%;
+    }
+
+    .lang-c {
+      background: #555b6e;
+      width: 17.6%;
+    }
+
+    .lang-other {
+      background: #d0d0d0;
+      width: 4.2%;
+    }
+
+    .lang-legend {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .lang-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .lang-dot {
+      width: 12px;
+      height: 12px;
+      border: 1px solid #ccc;
+      flex-shrink: 0;
+    }
+
+    .dot-cpp {
+      background: #1a1a1a;
+    }
+
+    .dot-c {
+      background: #555b6e;
+    }
+
+    .dot-other {
+      background: #d0d0d0;
+    }
+
+    /* description */
+    .description {
+      padding: 32px 40px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .description h2 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 12px;
+    }
+
+    .description p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 12px;
+    }
+
+    .description p:last-child {
+      margin-bottom: 0;
+    }
+
+    .description strong {
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    /* footer */
+    .footer {
+      padding: 24px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-left {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-right span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    /* responsive */
+    @media (max-width: 540px) {
+      .header,
+      .download-area,
+      .meta,
+      .languages,
+      .description,
+      .footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .dl-btn {
+        font-size: 14px;
+        padding: 12px 20px;
+        width: 100%;
+      }
+
+      .meta {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .lang-legend {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- header -->
+    <div class="header">
+      <div class="header-top">
+        <span class="label">Embeddity</span>
+        <span class="status">Simulated</span>
+      </div>
+      <h1>OS inside OS</h1>
+      <div class="tagline">A fake operating system simulator for your desktop.</div>
+    </div>
+
+    <!-- download -->
+    <div class="download-area">
+      <p>Get the simulator and run a tiny OS inside your real one.</p>
+      <a href="#" class="dl-btn" id="download-button">Download for Windows 64-bits</a>
+      <span class="lazy-note">* too lazy to add Windows 32-bits</span>
+    </div>
+
+    <!-- meta -->
+    <div class="meta">
+      <div class="meta-item">
+        <span class="meta-label">Author</span>
+        <span class="meta-value">linuxuser92</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Version</span>
+        <span class="meta-value mono">0.9.2</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Type</span>
+        <span class="meta-value">Fake OS / Simulator</span>
+      </div>
+    </div>
+
+    <!-- languages status (GitHub-style 2017 bar) -->
+    <div class="languages">
+      <div class="languages-header">
+        <span class="languages-title">Languages</span>
+        <span class="languages-status">● Written in C / C++</span>
+      </div>
+      <div class="lang-bar">
+        <div class="lang-segment lang-cpp"></div>
+        <div class="lang-segment lang-c"></div>
+        <div class="lang-segment lang-other"></div>
+      </div>
+      <div class="lang-legend">
+        <div class="lang-legend-item">
+          <span class="lang-dot dot-cpp"></span>
+          <span><strong>C++</strong> — 78.2%</span>
+        </div>
+        <div class="lang-legend-item">
+          <span class="lang-dot dot-c"></span>
+          <span><strong>C</strong> — 17.6%</span>
+        </div>
+        <div class="lang-legend-item">
+          <span class="lang-dot dot-other"></span>
+          <span>Other — 4.2%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- description -->
+    <div class="description">
+      <h2>About</h2>
+      <p>
+        <strong>Embeddity</strong> is a toy operating system simulator that runs inside your existing OS.
+        No real installation, no partitioning, no bootloader — just a virtual environment for fun.
+      </p>
+      <p>
+        Built by <strong>linuxuser92</strong> in <strong>C / C++</strong>. It's a small project, a proof of concept, and a little bit of a joke.
+        Expect rough edges and a lot of personality.
+      </p>
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+      <div class="footer-left">
+        &copy; 2025 linuxuser92
+      </div>
+      <div class="footer-right">
+        <span>Embeddity</span>
+        <span>Fake OS</span>
+        <span>Simulator</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- simple click feedback -->
+  <script>
+    (function() {
+      var btn = document.getElementById('download-button');
+      if (btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          var originalText = this.textContent;
+          this.textContent = 'Just a simulation — no download';
+          this.style.pointerEvents = 'none';
+          this.style.opacity = '0.5';
+          var self = this;
+          setTimeout(function() {
+            self.textContent = originalText;
+            self.style.pointerEvents = 'auto';
+            self.style.opacity = '1';
+          }, 1800);
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
